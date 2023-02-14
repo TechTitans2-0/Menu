@@ -1,0 +1,29 @@
+version: "3.1"
+
+services:
+  db:
+    image: postgres:15.2-alpine
+    container_name: app-db
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: postgrespw
+      POSTGRES_DB: mydb
+    volumes:
+      - data:/var/lib/postgresql
+  app:
+    build: .
+    container_name: app
+    ports:
+      - 3333:3333
+    depends_on:
+      - db
+    volumes:
+      - .:/usr/app
+      - /usr/app/node_modules
+
+  
+volumes:
+  data:
+    driver: local
