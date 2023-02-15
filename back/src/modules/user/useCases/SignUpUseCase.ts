@@ -1,5 +1,6 @@
 import { prisma } from '../../../database'
 import { hash } from 'bcrypt'
+import { User } from '@prisma/client'
 
 interface ISignUpRequest {
   name: string
@@ -8,7 +9,7 @@ interface ISignUpRequest {
 }
 
 class SignUpUseCase {
-  async execute({ name, email, password }: ISignUpRequest) {
+  async execute({ name, email, password }: ISignUpRequest): Promise<User> {
     const userAreadyExists = await prisma.user.findUnique({
       where: {
         email,

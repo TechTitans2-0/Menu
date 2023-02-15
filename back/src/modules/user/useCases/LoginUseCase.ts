@@ -8,8 +8,12 @@ interface ILoginRequest {
   password: string
 }
 
+interface ILoginResponse {
+  token: string
+}
+
 class LoginUseCase {
-  async execute({ email, password }: ILoginRequest) {
+  async execute({ email, password }: ILoginRequest): Promise<ILoginResponse> {
     const user = await prisma.user.findUnique({
       where: {
         email,
@@ -30,10 +34,10 @@ class LoginUseCase {
       const token = sign({ email }, env.JWT_SECRET, {
         subject: user.id,
         expiresIn: '1d',
-        issuer: 'api',
+        issuer: env.JWT_ISSUER,
       })
 
-      return token
+      return { token }
     } catch (error) {
       throw new Error('Error generating token')
     }
