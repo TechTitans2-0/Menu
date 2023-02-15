@@ -30,6 +30,7 @@ class LoginUseCase {
       const token = sign({ email }, env.JWT_SECRET, {
         subject: user.id,
         expiresIn: '1d',
+        issuer: 'api',
       })
 
       return token

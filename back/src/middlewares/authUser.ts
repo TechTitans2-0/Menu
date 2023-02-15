@@ -1,28 +1,47 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
-import { verify } from 'jsonwebtoken'
+import { JsonWebTokenError, TokenExpiredError, verify } from 'jsonwebtoken'
 import { env } from '../env'
+
+export const blacklist: string[] = []
+
+/**
+ * Middleware para autenticação de usuário
+ * @param request
+ * @param reply
+ */
 
 export async function authenticateUser(
   request: FastifyRequest,
-  replay: FastifyReply,
-  done: any,
+  reply: FastifyReply,
 ) {
   try {
     const authHeader = request.headers.authorization
 
-    if (authHeader) {
-      const [, token] = authHeader.split(' ')
-
-      verify(token, env.JWT_SECRET, (err, decoded) => {
-        if (err) {
-          return replay.status(401).send({ error: 'Invalid token' })
-        }
-        done()
-      })
-    } else {
-      return replay.status(401).send({ error: 'Token missing' })
+    if (!authHeader) {
+      return reply.status(401).send({ error: '⚠️ Token missing' })
     }
-  } catch {
-    return replay.status(401).send({ error: 'Invalid token' })
+
+    const [bearer, token] = authHeader.split(' ')
+
+    if (bearer !== 'Bearer' || !token) {
+      return reply.status(401).send({ error: '⚠️ Invalid token format' })
+    }
+    if (blacklist.includes(token)) {
+      return reply.status(401).send({ error: '⚠️ Invalid token' })
+    }
+    verify(token, env.JWT_SECRET, {
+      issuer: 'api',
+    })
+
+    return
+  } catch (error) {
+    if (error instanceof JsonWebTokenError) {
+      return reply.status(401).send({ error: '⚠️ Invalid token' })
+    } else if (error instanceof TokenExpiredError) {
+      return reply.status(401).send({ error: '⚠️ Token expired' })
+    } else {
+      console.error(error)
+      return reply.status(500).send({ error: 'Internal Server Error' })
+    }
   }
 }

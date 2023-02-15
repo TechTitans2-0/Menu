@@ -1,13 +1,5 @@
-import fastify from 'fastify'
 import { env } from './env'
-import { userRoutes } from './routes/user.routes'
-import cookie from '@fastify/cookie'
-
-export const server = fastify()
-
-server.register(cookie)
-
-server.register(userRoutes, { prefix: '/users' })
+import server from './app'
 
 server
   .listen({
