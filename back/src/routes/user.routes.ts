@@ -9,4 +9,6 @@ export async function userRoutes(app: FastifyInstance) {
   app.get('/me', { preHandler: authenticateUser }, (request, reply) => {
     reply.send({ message: 'ok' })
   })
+
+  app.decorateRequest('user', null)
 }

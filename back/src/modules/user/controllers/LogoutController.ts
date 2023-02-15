@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import { blacklist } from '../../../middlewares/authUser'
 
 class LogoutController {
-  async handle(request: FastifyRequest, reply: FastifyReply) {
+  async handle(request: FastifyRequest, reply: FastifyReply): Promise<never> {
     try {
       const token = request.headers.authorization?.split(' ')[1]
       blacklist.push(token as string)
