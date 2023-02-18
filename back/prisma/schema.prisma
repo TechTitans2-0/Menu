@@ -21,3 +21,60 @@ model User {
 
   @@map("users")
 }
+
+model Client {
+  id        String    @id @default(uuid())
+  name      String
+  cpf       String    @unique
+  email     String
+  password  String
+  birthday  DateTime
+  phone     String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  Order     Order[]
+
+  @@map("clients")
+}
+
+model Order {
+  id          String        @id @default(uuid())
+  description String
+  client      Client        @relation(fields: [clientId], references: [id])
+  clientId    String
+  status      Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  finishedAt  DateTime      @updatedAt
+  Order_Items Order_Items[]
+
+  @@map("orders")
+}
+
+model Order_Items {
+  id           String   @id @default(uuid())
+  order        Order    @relation(fields: [orderId], references: [id])
+  orderId      String
+  product      Products @relation(fields: [productId], references: [id])
+  productId    String
+  quantity     Int
+  pricePerUnit Float
+  priceTotal   Float
+  createdAt    DateTime @default(now())
+  finishedAt   DateTime @updatedAt
+
+  @@map("order_items")
+}
+
+model Products {
+  id          String        @id @default(uuid())
+  name        String
+  price       Float
+  description String
+  rating      Float
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  Order_Items Order_Items[]
+
+  @@map("products")
+}
