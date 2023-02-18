@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx src/server.ts",
+    "dev": "tsx watch src/server.ts",
     "test": "vitest",
     "migrate:test": "npx prisma migrate dev --name init --schema=./prisma/schema.test.prisma",
     "migrate:reset": "npx prisma migrate reset --force --schema=./prisma/schema.test.prisma"

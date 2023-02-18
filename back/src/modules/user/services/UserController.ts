@@ -1,8 +1,10 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
+import { z } from 'zod'
 import { userUseCase } from '.'
 import {
   createUserSchema,
   loginSchema,
+  zodErrorMap,
   findByEmailSchema,
   findByIdSchema,
 } from '../schemas/UserSchemas'
@@ -10,14 +12,19 @@ import {
 class UserController {
   async signUp(req: FastifyRequest, res: FastifyReply) {
     try {
-      const userData = createUserSchema.parse(req.body)
+      const { name, email, password } = createUserSchema.parse(req.body)
 
-      const user = await userUseCase.signUp(userData)
+      const user = await userUseCase.signUp({ name, email, password })
 
       res.status(201).send(user)
-    } catch (err: any) {
-      const errors = err.flatten().fieldErrors
-      res.status(400).send(errors)
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        const errors = zodErrorMap(err.issues)
+
+        res.status(400).send(errors)
+      } else {
+        res.status(400).send(err)
+      }
     }
   }
 
