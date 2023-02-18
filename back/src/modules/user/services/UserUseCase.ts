@@ -53,6 +53,12 @@ class UserUseCase {
     return { message: 'Logout success' }
   }
 
+  async turnAdmin(id: string): Promise<Object> {
+    await this.userRepository.turnAdmin(id)
+
+    return { message: 'User turned admin' }
+  }
+
   async findById(id: string): Promise<User> {
     const user = await this.userRepository.findById(id)
 
@@ -78,9 +84,9 @@ class UserUseCase {
   }
 
   async delete(id: string): Promise<Object> {
-    const user = await this.userRepository.delete(id)
+    await this.userRepository.delete(id)
 
-    return user
+    return { message: 'User deleted' }
   }
 }
 

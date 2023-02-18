@@ -20,18 +20,6 @@ export const createUserSchema = z.object({
     .max(50, { message: 'A senha deve ter no máximo 50 caracteres' }),
 })
 
-export const zodErrorMap = (fieldErrors: any) => {
-  if (Array.isArray(fieldErrors)) {
-    return fieldErrors.map((fieldError: any) => {
-      const { message, code } = fieldError
-      const field = fieldError.path.join('.')
-      return { field, message, code }
-    })
-  } else {
-    return [{ message: fieldErrors.message }]
-  }
-}
-
 export const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6).max(50),

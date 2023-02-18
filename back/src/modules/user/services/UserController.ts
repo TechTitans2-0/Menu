@@ -4,10 +4,10 @@ import { userUseCase } from '.'
 import {
   createUserSchema,
   loginSchema,
-  zodErrorMap,
   findByEmailSchema,
   findByIdSchema,
 } from '../schemas/UserSchemas'
+import { zodErrorMap } from '../errors/'
 
 class UserController {
   async signUp(req: FastifyRequest, res: FastifyReply) {
@@ -36,8 +36,13 @@ class UserController {
 
       res.status(200).send(token)
     } catch (err: any) {
-      const errors = err.flatten().fieldErrors
-      res.status(400).send(errors)
+      if (err instanceof z.ZodError) {
+        const errors = zodErrorMap(err.issues)
+
+        res.status(400).send(errors)
+      } else {
+        res.status(400).send(err)
+      }
     }
   }
 
@@ -46,6 +51,19 @@ class UserController {
       const token = await userUseCase.logout()
 
       res.status(200).send(token)
+    } catch (err: any) {
+      const errors = err.flatten().fieldErrors
+      res.status(400).send(errors)
+    }
+  }
+
+  async turnAdmin(req: FastifyRequest, res: FastifyReply) {
+    try {
+      const { id } = findByIdSchema.parse(req.params)
+
+      const result = await userUseCase.turnAdmin(id)
+
+      res.status(200).send(result)
     } catch (err: any) {
       const errors = err.flatten().fieldErrors
       res.status(400).send(errors)
@@ -95,8 +113,13 @@ class UserController {
 
       res.status(200).send(user)
     } catch (err: any) {
-      const errors = err.flatten().fieldErrors
-      res.status(400).send(errors)
+      if (err instanceof z.ZodError) {
+        const errors = zodErrorMap(err.issues)
+
+        res.status(400).send(errors)
+      } else {
+        res.status(400).send(err)
+      }
     }
   }
 

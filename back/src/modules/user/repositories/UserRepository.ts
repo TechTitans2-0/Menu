@@ -25,6 +25,17 @@ class UserRepository implements IUserRepository {
     return user
   }
 
+  async turnAdmin(id: string): Promise<void> {
+    await this.findById(id)
+
+    await prisma.user.update({
+      where: { id },
+      data: {
+        admin: true,
+      },
+    })
+  }
+
   async findById(id: string): Promise<User> {
     const user = await prisma.user.findUniqueOrThrow({
       where: { id },
@@ -57,14 +68,12 @@ class UserRepository implements IUserRepository {
     return updatedUser
   }
 
-  async delete(id: string): Promise<Object> {
+  async delete(id: string): Promise<void> {
     await this.findById(id)
 
     await prisma.user.delete({
       where: { id },
     })
-
-    return { message: 'User deleted' }
   }
 }
 
