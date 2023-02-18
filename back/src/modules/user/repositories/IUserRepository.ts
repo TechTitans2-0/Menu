@@ -1,4 +1,4 @@
-import { User } from '@prisma/client'
+import { UserDTO } from '../dtos/UserDTO'
 
 export interface IUserRepository {
   create(data: User): Promise<User>

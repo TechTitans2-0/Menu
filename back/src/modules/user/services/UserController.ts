@@ -7,7 +7,7 @@ import {
   findByEmailSchema,
   findByIdSchema,
 } from '../schemas/UserSchemas'
-import { zodErrorMap } from '../errors/'
+import { zodErrorMap } from '../../../utils/errors'
 
 class UserController {
   async signUp(req: FastifyRequest, res: FastifyReply) {

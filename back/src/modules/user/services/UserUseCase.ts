@@ -1,11 +1,11 @@
 /* eslint-disable no-useless-constructor */
-import { User } from '@prisma/client'
 import { IUserRepository } from '../repositories/IUserRepository'
+import { UserDTO } from '../dtos/UserDTO'
 import { hash, compare } from 'bcrypt'
 import { env } from '../../../env'
 import { sign } from 'jsonwebtoken'
 
-interface ILogin {
+export interface ILogin {
   email: string
   password: string
 }
@@ -13,7 +13,7 @@ interface ILogin {
 class UserUseCase {
   constructor(private userRepository: IUserRepository) {}
 
-  async signUp({ name, email, password }: User): Promise<User> {
+  async signUp({ name, email, password }: UserDTO): Promise<UserDTO> {
     const passHash = await hash(password, 8)
 
     const user = {
@@ -59,25 +59,25 @@ class UserUseCase {
     return { message: 'User turned admin' }
   }
 
-  async findById(id: string): Promise<User> {
+  async findById(id: string): Promise<UserDTO> {
     const user = await this.userRepository.findById(id)
 
     return user
   }
 
-  async findByEmail(email: string): Promise<User> {
+  async findByEmail(email: string): Promise<UserDTO> {
     const user = await this.userRepository.findByEmail(email)
 
     return user
   }
 
-  async findAll(): Promise<User[]> {
+  async findAll(): Promise<UserDTO[]> {
     const users = await this.userRepository.findAll()
 
     return users
   }
 
-  async update(id: string, data: User): Promise<User> {
+  async update(id: string, data: UserDTO): Promise<UserDTO> {
     const user = await this.userRepository.update(id, data)
 
     return user
