@@ -6,7 +6,9 @@ const prisma = new PrismaClient()
 
 class UserRepository implements IUserRepository {
   async create({ name, email, password }: User): Promise<User> {
-    const userAreadyExists = await this.findByEmail(email)
+    const userAreadyExists = await prisma.user.findUnique({
+      where: { email },
+    })
 
     if (userAreadyExists) {
       throw new Error('User already exists')
@@ -24,25 +26,17 @@ class UserRepository implements IUserRepository {
   }
 
   async findById(id: string): Promise<User> {
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findUniqueOrThrow({
       where: { id },
     })
-
-    if (!user) {
-      throw new Error('User not found')
-    }
 
     return user
   }
 
   async findByEmail(email: string): Promise<User> {
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findUniqueOrThrow({
       where: { email },
     })
-
-    if (!user) {
-      throw new Error('User not found')
-    }
 
     return user
   }

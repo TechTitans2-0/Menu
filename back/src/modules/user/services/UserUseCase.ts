@@ -49,6 +49,10 @@ class UserUseCase {
     }
   }
 
+  async logout(): Promise<Object> {
+    return { message: 'Logout success' }
+  }
+
   async findById(id: string): Promise<User> {
     const user = await this.userRepository.findById(id)
 

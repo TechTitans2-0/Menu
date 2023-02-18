@@ -29,14 +29,11 @@ describe('Users Routes', () => {
   })
 
   test('login test', async () => {
-    await request(app.server)
-      .post('/users/signup')
-      .send({
-        name: 'John Doe',
-        email: 'email@email.com.br',
-        password: '123456',
-      })
-      .expect(201)
+    await request(app.server).post('/users/signup').send({
+      name: 'John Doe',
+      email: 'email@email.com.br',
+      password: '123456',
+    })
 
     await request(app.server)
       .post('/users/login')

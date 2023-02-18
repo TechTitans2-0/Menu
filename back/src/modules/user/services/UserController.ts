@@ -14,7 +14,7 @@ class UserController {
 
       const user = await userUseCase.signUp(userData)
 
-      res.status(200).send(user)
+      res.status(201).send(user)
     } catch (err) {
       // const errors = err.flatten().fieldErrors
       res.status(400).send(err)
@@ -26,6 +26,17 @@ class UserController {
       const { email, password } = loginSchema.parse(req.body)
 
       const token = await userUseCase.login({ email, password })
+
+      res.status(200).send(token)
+    } catch (err: any) {
+      const errors = err.flatten().fieldErrors
+      res.status(400).send(errors)
+    }
+  }
+
+  async logout(req: FastifyRequest, res: FastifyReply) {
+    try {
+      const token = await userUseCase.logout()
 
       res.status(200).send(token)
     } catch (err: any) {
