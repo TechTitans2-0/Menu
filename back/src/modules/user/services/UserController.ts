@@ -15,9 +15,9 @@ class UserController {
       const user = await userUseCase.signUp(userData)
 
       res.status(201).send(user)
-    } catch (err) {
-      // const errors = err.flatten().fieldErrors
-      res.status(400).send(err)
+    } catch (err: any) {
+      const errors = err.flatten().fieldErrors
+      res.status(400).send(errors)
     }
   }
 

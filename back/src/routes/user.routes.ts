@@ -9,7 +9,7 @@ export async function userRoutes(app: FastifyInstance) {
   app.get('/:id', userController.findById)
   app.get('/email/:email', userController.findByEmail)
   app.get('/', userController.findAll)
-  app.put('/:id', userController.update)
+  app.put('/:id', { preHandler: authenticateUser }, userController.update)
   app.delete('/:id', userController.delete)
 
   app.decorateRequest('user', null)
