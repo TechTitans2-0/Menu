@@ -23,8 +23,8 @@ export class ProductsController {
       })
 
       return res.status(201).send(product)
-    } catch (error) {
-      handleError(error, res)
+    } catch (err) {
+      handleError(err, res)
     }
   }
 
@@ -66,9 +66,9 @@ export class ProductsController {
     try {
       const { category } = await findByCategorySchema.parseAsync(req.params)
 
-      const product = await productsUseCase.findByCategory(category)
+      const result = await productsUseCase.findByCategory(category)
 
-      res.status(200).send(product)
+      res.status(200).send(result)
     } catch (err) {
       handleError(err, res)
     }
