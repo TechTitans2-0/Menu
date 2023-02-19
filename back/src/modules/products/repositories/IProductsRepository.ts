@@ -5,6 +5,7 @@ export interface IProductsRepository {
   findById(id: string): Promise<ProductDTO>
   findAll(): Promise<ProductDTO[]>
   findByName(name: string): Promise<ProductDTO[]>
+  findByCategory(category: string): Promise<ProductDTO[]>
   update(id: string, data: ProductDTO): Promise<ProductDTO>
   delete(id: string): Promise<void>
 }

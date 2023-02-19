@@ -14,10 +14,10 @@ describe('Users Routes', () => {
 
   beforeEach(async () => {
     execSync('npm run migrate:reset')
-    execSync('npm run migrate:test')
+    execSync('npm run migrate:tests')
   })
 
-  test('signUp test', async () => {
+  test('signUp tests', async () => {
     await request(app.server)
       .post('/users/signup')
       .send({
@@ -28,7 +28,7 @@ describe('Users Routes', () => {
       .expect(201)
   })
 
-  test('login test', async () => {
+  test('login tests', async () => {
     await request(app.server).post('/users/signup').send({
       name: 'John Doe',
       email: 'email@email.com.br',
@@ -44,7 +44,7 @@ describe('Users Routes', () => {
       .expect(200)
   })
 
-  test('logout test', async () => {
+  test('logout tests', async () => {
     await request(app.server)
       .post('/users/signup')
       .send({

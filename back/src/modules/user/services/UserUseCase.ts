@@ -1,7 +1,7 @@
 /* eslint-disable no-useless-constructor */
 import { IUserRepository } from '../repositories/IUserRepository'
 import { UserDTO } from '../dtos/UserDTO'
-import { hash, compare } from 'bcrypt'
+import { compare, hash } from 'bcrypt'
 import { env } from '../../../env'
 import { sign } from 'jsonwebtoken'
 
@@ -27,9 +27,7 @@ class UserUseCase {
       password: passHash,
     }
 
-    const createdUser = await this.userRepository.create(user)
-
-    return createdUser
+    return await this.userRepository.create(user)
   }
 
   /**
@@ -68,7 +66,7 @@ class UserUseCase {
   }
 
   /**
-   * Turn user a admin
+   * Turn user admin
    * @id String
    */
   async turnAdmin(id: string): Promise<Object> {
@@ -82,9 +80,7 @@ class UserUseCase {
    * @id String
    */
   async findById(id: string): Promise<UserDTO> {
-    const user = await this.userRepository.findById(id)
-
-    return user
+    return await this.userRepository.findById(id)
   }
 
   /**
@@ -92,18 +88,14 @@ class UserUseCase {
    * @email String
    */
   async findByEmail(email: string): Promise<UserDTO> {
-    const user = await this.userRepository.findByEmail(email)
-
-    return user
+    return await this.userRepository.findByEmail(email)
   }
 
   /**
    * Show all users
    */
   async findAll(): Promise<UserDTO[]> {
-    const users = await this.userRepository.findAll()
-
-    return users
+    return await this.userRepository.findAll()
   }
 
   /**
@@ -112,9 +104,7 @@ class UserUseCase {
    * @data name?, email?, admin?, password?
    **/
   async update(id: string, data: UserDTO): Promise<UserDTO> {
-    const user = await this.userRepository.update(id, data)
-
-    return user
+    return await this.userRepository.update(id, data)
   }
 
   /**

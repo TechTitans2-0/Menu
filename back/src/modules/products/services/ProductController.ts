@@ -1,9 +1,9 @@
-import { FastifyRequest, FastifyReply } from 'fastify'
-import { ZodError } from 'zod'
-import { zodErrorMap } from '../../../utils/errors'
+import { FastifyReply, FastifyRequest } from 'fastify'
 import { productsUseCase } from '.'
+import { handleError } from '../../../utils/errors'
 import {
   createProductSchema,
+  findByCategorySchema,
   findByIdSchema,
   findByNameSchema,
 } from '../schemas/ProductSchemas'
@@ -24,10 +24,7 @@ export class ProductsController {
 
       return res.status(201).send(product)
     } catch (error) {
-      if (error instanceof ZodError) {
-        return res.status(400).send(zodErrorMap(error))
-      }
-      return res.status(500).send(error)
+      handleError(error, res)
     }
   }
 
@@ -37,7 +34,7 @@ export class ProductsController {
 
       res.status(200).send(products)
     } catch (err) {
-      res.status(400).send(err)
+      handleError(err, res)
     }
   }
 
@@ -49,7 +46,7 @@ export class ProductsController {
 
       res.status(200).send(product)
     } catch (err) {
-      res.status(400).send(err)
+      handleError(err, res)
     }
   }
 
@@ -61,7 +58,19 @@ export class ProductsController {
 
       res.status(200).send(product)
     } catch (err) {
-      res.status(400).send(err)
+      handleError(err, res)
+    }
+  }
+
+  async findByCategory(req: FastifyRequest, res: FastifyReply) {
+    try {
+      const { category } = await findByCategorySchema.parseAsync(req.params)
+
+      const product = await productsUseCase.findByCategory(category)
+
+      res.status(200).send(product)
+    } catch (err) {
+      handleError(err, res)
     }
   }
 
@@ -81,13 +90,7 @@ export class ProductsController {
 
       res.status(200).send(product)
     } catch (err) {
-      if (err instanceof ZodError) {
-        const errors = zodErrorMap(err.issues)
-
-        res.status(400).send(errors)
-      } else {
-        res.status(400).send(err)
-      }
+      handleError(err, res)
     }
   }
 
@@ -99,7 +102,7 @@ export class ProductsController {
 
       res.status(200).send(result)
     } catch (err) {
-      res.status(400).send(err)
+      handleError(err, res)
     }
   }
 }

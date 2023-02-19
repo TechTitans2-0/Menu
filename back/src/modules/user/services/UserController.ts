@@ -1,13 +1,12 @@
-import { FastifyRequest, FastifyReply } from 'fastify'
-import { ZodError } from 'zod'
+import { FastifyReply, FastifyRequest } from 'fastify'
 import { userUseCase } from '.'
 import {
   createUserSchema,
-  loginSchema,
   findByEmailSchema,
   findByIdSchema,
+  loginSchema,
 } from '../schemas/UserSchemas'
-import { zodErrorMap } from '../../../utils/errors'
+import { handleError } from '../../../utils/errors'
 
 class UserController {
   async signUp(req: FastifyRequest, res: FastifyReply) {
@@ -15,18 +14,11 @@ class UserController {
       const { name, email, password } = await createUserSchema.parseAsync(
         req.body,
       )
-
       const user = await userUseCase.signUp({ name, email, password })
 
       res.status(201).send(user)
     } catch (err) {
-      if (err instanceof ZodError) {
-        const errors = zodErrorMap(err.issues)
-
-        res.status(400).send(errors)
-      } else {
-        res.status(400).send(err)
-      }
+      handleError(err, res)
     }
   }
 
@@ -38,24 +30,17 @@ class UserController {
 
       res.status(200).send(token)
     } catch (err: any) {
-      if (err instanceof ZodError) {
-        const errors = zodErrorMap(err.issues)
-
-        res.status(400).send(errors)
-      } else {
-        res.status(400).send(err)
-      }
+      handleError(err, res)
     }
   }
 
   async logout(req: FastifyRequest, res: FastifyReply) {
     try {
-      const token = await userUseCase.logout()
+      const [token] = await Promise.all([userUseCase.logout()])
 
       res.status(200).send(token)
     } catch (err: any) {
-      const errors = err.flatten().fieldErrors
-      res.status(400).send(errors)
+      handleError(err, res)
     }
   }
 
@@ -72,8 +57,7 @@ class UserController {
 
       res.status(200).send(result)
     } catch (err: any) {
-      const errors = err.flatten().fieldErrors
-      res.status(400).send(errors)
+      handleError(err, res)
     }
   }
 
@@ -85,7 +69,7 @@ class UserController {
 
       res.status(200).send(user)
     } catch (err) {
-      res.status(400).send(err)
+      handleError(err, res)
     }
   }
 
@@ -97,7 +81,7 @@ class UserController {
 
       res.status(200).send(user)
     } catch (err) {
-      res.status(400).send(err)
+      handleError(err, res)
     }
   }
 
@@ -107,7 +91,7 @@ class UserController {
 
       res.status(200).send(users)
     } catch (err) {
-      res.status(400).send(err)
+      handleError(err, res)
     }
   }
 
@@ -120,13 +104,7 @@ class UserController {
 
       res.status(200).send(user)
     } catch (err: any) {
-      if (err instanceof ZodError) {
-        const errors = zodErrorMap(err.issues)
-
-        res.status(400).send(errors)
-      } else {
-        res.status(400).send(err)
-      }
+      handleError(err, res)
     }
   }
 
@@ -138,7 +116,7 @@ class UserController {
 
       res.status(200).send(user)
     } catch (err) {
-      res.status(400).send(err)
+      handleError(err, res)
     }
   }
 }

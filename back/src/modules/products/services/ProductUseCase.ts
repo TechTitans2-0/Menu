@@ -21,6 +21,10 @@ class ProductsUseCase {
     return await this.productsRepository.findByName(name)
   }
 
+  async findByCategory(category: string): Promise<ProductDTO[]> {
+    return await this.productsRepository.findByCategory(category)
+  }
+
   async update(id: string, data: ProductDTO): Promise<ProductDTO> {
     return await this.productsRepository.update(id, data)
   }

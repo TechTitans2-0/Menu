@@ -25,3 +25,7 @@ export const findByIdSchema = z.object({
 export const findByNameSchema = z.object({
   name: z.string(),
 })
+
+export const findByCategorySchema = z.object({
+  category: z.string(),
+})

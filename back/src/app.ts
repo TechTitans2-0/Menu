@@ -4,7 +4,7 @@ import { productRoutes } from './routes/product.routes'
 
 const app = fastify()
 
-app.register(userRoutes, { prefix: '/users' })
-app.register(productRoutes, { prefix: '/products' })
+app.register(userRoutes, { prefix: '/api/users' })
+app.register(productRoutes, { prefix: '/api/products' })
 
 export default app
