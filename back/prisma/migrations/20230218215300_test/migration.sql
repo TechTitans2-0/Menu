@@ -55,6 +55,7 @@ CREATE TABLE "products" (
     "price" REAL NOT NULL,
     "description" TEXT NOT NULL,
     "rating" REAL NOT NULL,
+    "category" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL
 );
@@ -64,3 +65,6 @@ CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "clients_cpf_key" ON "clients"("cpf");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "products_name_key" ON "products"("name");

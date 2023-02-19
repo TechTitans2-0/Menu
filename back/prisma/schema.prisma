@@ -68,10 +68,11 @@ model Order_Items {
 
 model Products {
   id          String        @id @default(uuid())
-  name        String
+  name        String        @unique
   price       Float
   description String
   rating      Float
+  category    String
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   Order_Items Order_Items[]

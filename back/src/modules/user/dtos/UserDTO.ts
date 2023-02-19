@@ -4,6 +4,4 @@ export interface UserDTO {
   email: string
   password: string
   admin?: boolean
-  created_at?: Date
-  updated_at?: Date
 }

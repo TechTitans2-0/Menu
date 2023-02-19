@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
-import { z } from 'zod'
+import { ZodError } from 'zod'
 import { userUseCase } from '.'
 import {
   createUserSchema,
@@ -12,13 +12,15 @@ import { zodErrorMap } from '../../../utils/errors'
 class UserController {
   async signUp(req: FastifyRequest, res: FastifyReply) {
     try {
-      const { name, email, password } = createUserSchema.parse(req.body)
+      const { name, email, password } = await createUserSchema.parseAsync(
+        req.body,
+      )
 
       const user = await userUseCase.signUp({ name, email, password })
 
       res.status(201).send(user)
     } catch (err) {
-      if (err instanceof z.ZodError) {
+      if (err instanceof ZodError) {
         const errors = zodErrorMap(err.issues)
 
         res.status(400).send(errors)
@@ -36,7 +38,7 @@ class UserController {
 
       res.status(200).send(token)
     } catch (err: any) {
-      if (err instanceof z.ZodError) {
+      if (err instanceof ZodError) {
         const errors = zodErrorMap(err.issues)
 
         res.status(400).send(errors)
@@ -57,6 +59,11 @@ class UserController {
     }
   }
 
+  /**
+   * Turn a user into an admin
+   * @param req
+   * @param res
+   */
   async turnAdmin(req: FastifyRequest, res: FastifyReply) {
     try {
       const { id } = findByIdSchema.parse(req.params)
@@ -113,7 +120,7 @@ class UserController {
 
       res.status(200).send(user)
     } catch (err: any) {
-      if (err instanceof z.ZodError) {
+      if (err instanceof ZodError) {
         const errors = zodErrorMap(err.issues)
 
         res.status(400).send(errors)
