@@ -32,10 +32,3 @@ export const findByIdSchema = z.object({
 export const findByEmailSchema = z.object({
   email: z.string().email(),
 })
-
-export const updateUserSchema = z.object({
-  id: z.string().uuid(),
-  name: z.string().min(3).max(50),
-  email: z.string().email(),
-  password: z.string().min(6).max(50),
-})

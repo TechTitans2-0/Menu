@@ -26,7 +26,7 @@ model Client {
   id        String    @id @default(uuid())
   name      String
   cpf       String    @unique
-  email     String
+  email     String    @unique
   password  String
   birthday  DateTime
   phone     String

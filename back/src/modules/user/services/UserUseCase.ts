@@ -1,6 +1,7 @@
 /* eslint-disable no-useless-constructor */
 import { IUserRepository } from '../repositories/IUserRepository'
 import { UserDTO } from '../dtos/UserDTO'
+import { User } from '@prisma/client'
 import { compare, hash } from 'bcrypt'
 import { env } from '../../../env'
 import { sign } from 'jsonwebtoken'
@@ -18,7 +19,7 @@ class UserUseCase {
    * @email String
    * @password String
    */
-  async signUp({ name, email, password }: UserDTO): Promise<UserDTO> {
+  async signUp({ name, email, password }: UserDTO): Promise<User> {
     const passHash = await hash(password, 8)
 
     const user = {
@@ -79,7 +80,7 @@ class UserUseCase {
    * Find User by id
    * @id String
    */
-  async findById(id: string): Promise<UserDTO> {
+  async findById(id: string): Promise<User> {
     return await this.userRepository.findById(id)
   }
 
@@ -87,14 +88,14 @@ class UserUseCase {
    * Find User by email
    * @email String
    */
-  async findByEmail(email: string): Promise<UserDTO> {
+  async findByEmail(email: string): Promise<User> {
     return await this.userRepository.findByEmail(email)
   }
 
   /**
    * Show all users
    */
-  async findAll(): Promise<UserDTO[]> {
+  async findAll(): Promise<User[]> {
     return await this.userRepository.findAll()
   }
 
@@ -103,7 +104,7 @@ class UserUseCase {
    * @id String
    * @data name?, email?, admin?, password?
    **/
-  async update(id: string, data: UserDTO): Promise<UserDTO> {
+  async update(id: string, data: UserDTO): Promise<User> {
     return await this.userRepository.update(id, data)
   }
 

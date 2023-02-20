@@ -1,11 +1,11 @@
 import { PrismaClient, Products } from '@prisma/client'
 import { ProductDTO } from '../dtos/ProductDTO'
 
-import { IProductsRepository } from './IProductsRepository'
+import { IProductRepository } from './IProductRepository'
 
 const prisma = new PrismaClient()
 
-class ProductsRepository implements IProductsRepository {
+class ProductRepository implements IProductRepository {
   async create(data: ProductDTO): Promise<Products> {
     const productAlreadyExists = await prisma.products.findUnique({
       where: { name: data.name },
@@ -30,15 +30,13 @@ class ProductsRepository implements IProductsRepository {
     })
   }
 
-  async findByName(name: string): Promise<ProductDTO[]> {
-    const products = await prisma.products.findMany({
+  async findByName(name: string): Promise<Products[]> {
+    return prisma.products.findMany({
       where: { name: { contains: name } },
     })
-    console.log(products)
-    return products
   }
 
-  async findByCategory(category: string): Promise<ProductDTO[]> {
+  async findByCategory(category: string): Promise<Products[]> {
     return prisma.products.findMany({
       where: { category: { contains: category } },
     })
@@ -62,4 +60,4 @@ class ProductsRepository implements IProductsRepository {
   }
 }
 
-export { ProductsRepository }
+export { ProductRepository }
