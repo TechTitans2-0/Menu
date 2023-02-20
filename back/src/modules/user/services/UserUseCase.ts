@@ -2,6 +2,7 @@
 import { IUserRepository } from '../repositories/IUserRepository'
 import { UserDTO } from '../dtos/UserDTO'
 import { User } from '@prisma/client'
+import { blacklist } from '../../../middlewares/authUser'
 import { compare, hash } from 'bcrypt'
 import { env } from '../../../env'
 import { sign } from 'jsonwebtoken'
@@ -62,7 +63,8 @@ class UserUseCase {
   /**
    * Logout a user
    */
-  async logout(): Promise<Object> {
+  async logout(token: string): Promise<Object> {
+    blacklist.push(token)
     return { message: 'Logout success' }
   }
 

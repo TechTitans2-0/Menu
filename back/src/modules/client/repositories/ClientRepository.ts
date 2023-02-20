@@ -60,11 +60,8 @@ class ClientRepository implements IClientRepository {
   async delete(id: string): Promise<void> {
     await this.findById(id)
 
-    await prisma.client.update({
+    await prisma.client.delete({
       where: { id },
-      data: {
-        deletedAt: new Date(),
-      },
     })
   }
 }

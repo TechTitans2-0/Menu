@@ -36,9 +36,10 @@ class UserController {
 
   async logout(req: FastifyRequest, res: FastifyReply) {
     try {
-      const token = await userUseCase.logout()
+      const token = req.headers.authorization as string
+      const result = await userUseCase.logout(token)
 
-      res.status(200).send(token)
+      res.status(200).send(result)
     } catch (err: any) {
       handleError(err, res)
     }

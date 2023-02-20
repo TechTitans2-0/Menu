@@ -3,6 +3,7 @@ import { authenticateUser } from '../middlewares/authUser'
 import { clientController } from '../modules/client/services'
 
 export async function clientRoutes(app: FastifyInstance) {
+  app.decorateRequest('user', null)
   app.post('/signup', clientController.signUp)
   app.post('/login', clientController.login)
   app.post('/logout', { preHandler: authenticateUser }, clientController.logout)
@@ -17,6 +18,4 @@ export async function clientRoutes(app: FastifyInstance) {
   app.get('/cpf/:cpf', clientController.findByCpf)
   app.put('/:id', { preHandler: authenticateUser }, clientController.update)
   app.delete('/:id', { preHandler: authenticateUser }, clientController.delete)
-
-  app.decorateRequest('user', null)
 }

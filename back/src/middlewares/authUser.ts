@@ -1,4 +1,4 @@
-import { FastifyRequest, FastifyReply } from 'fastify'
+import { FastifyReply, FastifyRequest } from 'fastify'
 import { JsonWebTokenError, TokenExpiredError, verify } from 'jsonwebtoken'
 import { env } from '../env'
 
@@ -33,7 +33,7 @@ export async function authenticateUser(
     if (bearer !== 'Bearer' || !token) {
       return reply.status(401).send({ error: '⚠️ Invalid token format' })
     }
-    if (blacklist.includes(token)) {
+    if (blacklist.includes(authHeader)) {
       return reply.status(401).send({ error: '⚠️ Invalid token' })
     }
 
