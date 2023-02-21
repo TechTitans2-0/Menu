@@ -12,7 +12,7 @@ const envSchema = z.object({
 
 const _env = envSchema.safeParse(process.env)
 
-if (_env.success === false) {
+if (!_env.success) {
   console.error('Environment variables are not valid', _env.error.format())
 
   throw new Error('Environment variables are not valid')

@@ -1,11 +1,12 @@
 import { PrismaClient, User } from '@prisma/client'
+import { UserDTO } from '../dtos/UserDTO'
 
 import { IUserRepository } from './IUserRepository'
 
 const prisma = new PrismaClient()
 
 class UserRepository implements IUserRepository {
-  async create({ name, email, password }: User): Promise<User> {
+  async create({ name, email, password }: UserDTO): Promise<User> {
     const userAlreadyExists = await prisma.user.findUnique({
       where: { email },
     })
@@ -50,7 +51,7 @@ class UserRepository implements IUserRepository {
     return prisma.user.findMany()
   }
 
-  async update(id: string, data: User): Promise<User> {
+  async update(id: string, data: UserDTO): Promise<User> {
     await this.findById(id)
 
     return prisma.user.update({

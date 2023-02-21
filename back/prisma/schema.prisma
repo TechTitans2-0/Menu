@@ -43,25 +43,26 @@ model Order {
   description String
   client      Client        @relation(fields: [clientId], references: [id])
   clientId    String
-  status      Boolean       @default(false)
+  status      Int           @default(0)
   createdAt   DateTime      @default(now())
-  finishedAt  DateTime      @updatedAt
+  updatedAt   DateTime      @updatedAt
+  finishedAt  DateTime?     @default(now())
   Order_Items Order_Items[]
 
   @@map("orders")
 }
 
 model Order_Items {
-  id           String   @id @default(uuid())
-  order        Order    @relation(fields: [orderId], references: [id])
+  id           String    @id @default(uuid())
+  order        Order     @relation(fields: [orderId], references: [id])
   orderId      String
-  product      Products @relation(fields: [productId], references: [id])
+  product      Products  @relation(fields: [productId], references: [id])
   productId    String
   quantity     Int
   pricePerUnit Float
   priceTotal   Float
-  createdAt    DateTime @default(now())
-  finishedAt   DateTime @updatedAt
+  createdAt    DateTime  @default(now())
+  finishedAt   DateTime?
 
   @@map("order_items")
 }

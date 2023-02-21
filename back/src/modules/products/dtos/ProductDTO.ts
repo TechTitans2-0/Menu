@@ -5,4 +5,6 @@ export interface ProductDTO {
   description: string
   rating: number
   category: string
+  created_at?: Date
+  updated_at?: Date
 }

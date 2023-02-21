@@ -2,13 +2,6 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import { JsonWebTokenError, TokenExpiredError, verify } from 'jsonwebtoken'
 import { env } from '../env'
 
-interface AuthRequest extends FastifyRequest {
-  user?: {
-    email: string
-    id: string
-  }
-}
-
 export const blacklist: string[] = []
 
 /**
@@ -18,7 +11,7 @@ export const blacklist: string[] = []
  */
 
 export async function authenticateUser(
-  request: AuthRequest,
+  request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
   try {
@@ -40,15 +33,14 @@ export async function authenticateUser(
     const decodedToken = verify(token, env.JWT_SECRET, {
       issuer: env.JWT_ISSUER,
     }) as {
-      email: string
       sub: string
+      email: string
     }
 
-    request.user = {
+    request.body = {
       email: decodedToken.email,
       id: decodedToken.sub,
     }
-    return
   } catch (error) {
     if (error instanceof JsonWebTokenError) {
       return reply.status(401).send({ error: '⚠️ Invalid token' })

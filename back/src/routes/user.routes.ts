@@ -20,6 +20,4 @@ export async function userRoutes(app: FastifyInstance) {
   app.get('/', userController.findAll)
   app.put('/:id', { preHandler: authenticateUser }, userController.update)
   app.delete('/:id', { preHandler: authenticateUser }, userController.delete)
-
-  app.decorateRequest('user', null)
 }
