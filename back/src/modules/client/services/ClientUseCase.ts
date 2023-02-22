@@ -2,7 +2,7 @@
 import { IClientRepository } from '../repositories/IClientRepository'
 import { ClientDTO } from '../dtos/ClientDTO'
 import { Client } from '@prisma/client'
-import { blacklist } from '../../../middlewares/authUser'
+import { blacklist } from '../../../middlewares/authUserMiddle'
 import { compare, hash } from 'bcrypt'
 import { sign } from 'jsonwebtoken'
 import { env } from '../../../env'
@@ -54,7 +54,7 @@ class ClientUseCase {
   }
 
   async logout(token: string): Promise<Object> {
-    blacklist.push(token)
+    blacklist.add(token)
     return { message: 'Logout success' }
   }
 
